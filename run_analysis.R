@@ -44,19 +44,25 @@ names(subject_train)<-"subjects"
 
 
 
-## Extract only the std and mean measures
+# Extract only the std and mean measures
 means_and_std_colnames<-colnames(X_test)[mean_std_idx]
+
 X_test_std_mean<-cbind(subject_test,Y_test,subset(X_test,select=means_and_std_colnames))
+
 X_train_std_mean<-cbind(subject_train,Y_train,subset(X_train,select=means_and_std_colnames))
 
-## Merge the training and the test sets to create one data set.
+# Merge the training and the test sets to create one data set.
+
 ALL_data<-rbind(X_test_std_mean, X_train_std_mean)
 
-## Create a second, independent tidy data set with the average of each variable for each activity and each subject
+# Create a second, independent tidy data set with the average of each variable for each activity and each subject
+
 tidy_data<-aggregate(ALL_data[,3:ncol(ALL_data)],list(Subject=ALL_data$subjects, Activity=ALL_data$labels), mean)
+
 tidy_data<-tidy_data[order(tidy_data$Subject),]
 
 # Use activity names instead of numbers
+
 tidy_data$Activity<-activity_labels[tidy_data$Activity,]
 
 write.table(tidy_data, file="./tidy_samsung_data.txt", sep="\t", row.names=FALSE)
